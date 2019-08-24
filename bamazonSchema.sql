@@ -23,3 +23,34 @@ CREATE TABLE products(
 );
 
 -- * Departments: clothing / electronics / 
+
+-- Mock Data to start with
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("white shirts", "clothing", 80, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("blue jeans", "clothing", 90, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("grey hoodie", "clothing", 50, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("brown loafer", "clothing", 100, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("black slacks", "clothing", 80, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("2080TI GPU", "electronics", 480, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("32in 144Hz qhd monitor", "electronics", 700, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("16GB RAM", "electronics", 250, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("Intel 9900K CPU", "electronics", 420, 10);
+
+INSERT INTO products (product_name, department_name, price, stock_quantity)
+VALUES ("Realforce Keyboard", "electronics", 200, 10);
