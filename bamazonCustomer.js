@@ -5,6 +5,7 @@ require('dotenv').config();
 var mysql = require("mysql");
 var inquirer = require("inquirer");
 var mysqlPass = require("./mysqlPass");
+const {table} = require('table');
 // ________________________________________
 // MYSQL CONNECTION
 // ========================================
@@ -26,17 +27,22 @@ connection.connect(function(err) {
 // FUNCTIONS
 // ========================================
 function showProducts() {                   // Display All Products
+  let tableData = [];
   var query = connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
     for (var i = 0; i < res.length; i++) {
-      var id = res[i].id;
-      var name = res[i].product_name;
-      var department = res[i].department_name;
-      var price = res[i].price;
-      var quantity = res[i].stock_quantity;
-      console.log("ID: " + id + " | " + "Name: " + name + " | " + "Department: " + department + " | " + "Price: " + "$"+ price + " | " + "Quantity: " + quantity);
-      // console.log("ID: " + id + " Name: " + name + " Department: " + department + " Price: " + "$"+ price + " Quantity: " + quantity);
+      var id = "ID: " + res[i].id;
+      var name = "Name: " + res[i].product_name;
+      var department = "Department: " + res[i].department_name;
+      var price = "Price: $" + res[i].price;
+      var quantity = "Quantity: " + res[i].stock_quantity;
+ 
+      let data;
+      data = [id, name, department, price, quantity];
+      tableData.push(data);
     }
+    var output = table(tableData);
+    console.log(output);
     console.log(query.sql);       // logs the actual query being run
     purchase();
   });
