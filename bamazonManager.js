@@ -78,15 +78,15 @@ function doOption(option) {
       break;
     
     case "View Low Inventory":
-      viewLowInventory();
+      displayLowInventory();
       break;
     
     case "Add to Inventory":
-      addInventoryPrompt();
+      restockPrompt();
       break;
     
     case "Add New Product":
-      addNewProductPrompt();
+      newProductPrompt();
       break;
     case "Exit":
       connection.end();
@@ -95,6 +95,7 @@ function doOption(option) {
 }
 
 function displayInventory() {
+  console.log("Products in Bamazon inventory that has stock quanitity higher than 0");
   let tableData = [];
   connection.query("SELECT * FROM products WHERE stock_quantity > 0", function(err, res) {
     if (err) throw err;
@@ -115,7 +116,8 @@ function displayInventory() {
   })
 }
 
-function viewLowInventory() {
+function displayLowInventory() {
+  console.log("Products with quantity lower than 5 in Bamazon inventory.");
   let tableData = [];
   connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
     if (err) throw err;
@@ -136,7 +138,7 @@ function viewLowInventory() {
   })
 }
 
-function addInventoryPrompt() {
+function restockPrompt() {
   inquirer
     .prompt([
       {
@@ -155,11 +157,11 @@ function addInventoryPrompt() {
     .then(function(answer) {
       var id = answer.ID;
       var addQuantity = answer.quantity;
-      addInventory(id, addQuantity);
+      restock(id, addQuantity);
     })
 }
 
-function addInventory(id, addQuantity) {
+function restock(id, addQuantity) {
   connection.query("SELECT * FROM products WHERE id =" + id, function(err, product) {
     if (err) throw err;
     var name = product[0].product_name;
