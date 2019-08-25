@@ -74,7 +74,7 @@ function doOption(option) {
   // switch that takes in option as parameter
   switch(option) {
     case "View Products for Sale":
-      viewProducts();
+      displayInventory();
       break;
     
     case "View Low Inventory":
@@ -86,7 +86,7 @@ function doOption(option) {
       break;
     
     case "Add New Product":
-      addNewProduct();
+      addNewProductPrompt();
       break;
     case "Exit":
       connection.end();
@@ -94,7 +94,7 @@ function doOption(option) {
   }
 }
 
-function viewProducts() {
+function displayInventory() {
   let tableData = [];
   connection.query("SELECT * FROM products WHERE stock_quantity > 0", function(err, res) {
     if (err) throw err;
