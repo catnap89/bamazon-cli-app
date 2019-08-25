@@ -28,7 +28,7 @@ connection.connect(function(err) {
 // ========================================
 function showProducts() {                   // Display All Products
   let tableData = [];
-  var query = connection.query("SELECT * FROM products", function(err, res) {
+  connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
     for (var i = 0; i < res.length; i++) {
       var id = "ID: " + res[i].id;
@@ -43,72 +43,57 @@ function showProducts() {                   // Display All Products
     }
     var output = table(tableData);
     console.log(output);
-    console.log(query.sql);       // logs the actual query being run
-    purchase();
+    purchasePrompt();
   });
 }
 
-function purchase() {
-  connection.query("SELECT * FROM products", function(err, products) {    // query the database for all products being auctioned
+function purchasePrompt() {
+  inquirer      
+    .prompt([
+      {
+        name: "ID",
+        type: "input",
+        message: "Please input ID of the product you would like to purchase",
+        filter: Number
+      },
+      {
+        name: "quantity",
+        type: "input",
+        message: "How many would you like to purchse?",
+        filter: Number
+      }
+    ])
+    .then(function(answer) {
+      var orderAmt = answer.quantity;
+      var id = answer.ID;
+      purchaseOrder(id, orderAmt);
+    });
+}
+
+function purchaseOrder(id, orderAmt) {
+  connection.query("SELECT * FROM products WHERE id = " + id, function(err, product) {    // query the database about the product with same ID as user choice
     if (err) throw err;
-
-    inquirer        // once you have the products, prompt the user for which product they would like to purchase and how many
-      .prompt([
-        {
-          name: "choice",
-          type: "rawlist",
-          choices: function() {
-            var choiceArray = [];
-            for (var i = 0; i < products.length; i++) {
-              choiceArray.push(products[i].id);
-            }
-            return choiceArray;
+    var name = product[0].product_name;
+    var stockQuantity = product[0].stock_quantity;
+    var totalCost = product[0].price * orderAmt;
+    if (orderAmt <= stockQuantity) {             // determine if stock_quantity was enough for user to purchase quantity
+      console.log("Successfully purchased " + orderAmt + " " + name + "!"+ "Total cost: $" + totalCost);
+      connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+          {
+            stock_quantity: stockQuantity - orderAmt
           },
-          message: "What product would you like to purchase?"
-        },
-        {
-          name: "quantity",
-          type: "input",
-          message: "How many would you like to purchse?"
-        }
-      ])
-      .then(function(answer) {
-        // get the information of the chosen item
-        var chosenItem;
-        for (var i = 0; i < products.length; i++) {
-          if (products[i].id === answer.choice) {
-            chosenItem = products[i];
+          {
+            id: id
           }
-        }
-
-        // determine if stock_quantity was enough for user to purchase quantity
-        if (chosenItem.stock_quantity > parseInt(answer.quantity)) {
-          // if stock_quantity was high enough, so update db, let the user know, and show the total cost to user, start over
-          connection.query(
-            "UPDATE products SET ? WHERE ?",
-            [
-              {
-                stock_quantity: chosenItem.stock_quantity - answer.quantity
-              },
-              {
-                id: chosenItem.id
-              }
-            ],
-            function(error) {
-              if (error) throw err;
-              console.log("Successfully purchased product! You spent $" + chosenItem.price * answer.quantity);
-              // showProducts();
-              connection.end();
-            }
-          );
-        }
-        else {
-          // Stock_quantity wasn't high enough, so apologize and start over
-          console.log("Bamazon does have enough products in stock to complete your order. Try again...");
-          purchase();
-        }
-      });
+        ]
+      )
+    } else {
+      console.log("Bamazon does have enough " + name + " in stock to complete your order. Please try again...");
+      showProducts();
+    }
+    connection.end();
   });
 
 }
-
