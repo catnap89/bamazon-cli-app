@@ -1,23 +1,3 @@
-// Running this application will:
-
-//   * List a set of menu options:
-
-//     * View Products for Sale
-    
-//     * View Low Inventory
-    
-//     * Add to Inventory
-    
-//     * Add New Product
-
-//   * If a manager selects `View Products for Sale`, the app should list every available item: the item IDs, names, prices, and quantities.
-
-//   * If a manager selects `View Low Inventory`, then it should list all items with an inventory count lower than five.
-
-//   * If a manager selects `Add to Inventory`, your app should display a prompt that will let the manager "add more" of any item currently in the store.
-
-//   * If a manager selects `Add New Product`, it should allow the manager to add a completely new product to the store.
-
 // ________________________________________
 // DEPENDENCIES
 // ========================================
@@ -95,7 +75,7 @@ function doOption(option) {
 }
 
 function displayInventory() {
-  console.log("Products in Bamazon inventory that has stock quanitity higher than 0");
+  console.log("Products in Bamazon inventory that has stock quantity higher than 0");
   let tableData = [];
   connection.query("SELECT * FROM products WHERE stock_quantity > 0", function(err, res) {
     if (err) throw err;
@@ -184,3 +164,51 @@ function restock(id, addQuantity) {
   menuOptions();
 }
 
+function newProductPrompt() {
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        type: "input",
+        message: "What is the name of the product to add to Bamazon inventory?"
+      },
+      {
+        name: "department",
+        type: "input",
+        message: "Which department is the product categorized as?"
+      },
+      {
+        name: "price",
+        type: "number",
+        message: "What is the price of the product?"
+      },
+      {
+        name: "quantity",
+        type: "number",
+        message: "How many items do you want to add to the inventory?"
+      }
+    ])
+    .then(function(res) {
+      var name = res.name;
+      var department = res.department;
+      var price = res.price;
+      var quantity = res.quantity;
+
+      addNewProduct(name, department, price, quantity);
+    })
+}
+
+function addNewProduct(name, department, price, quantity) {
+  connection.query(
+    "INSERT INTO products SET ?",
+    {
+      product_name: name,
+      department_name: department,
+      price: price,
+      stock_quantity: quantity
+    }
+  )
+  console.log("Following product was added as a new product!\n" +
+  "Name: " + name + " |" + " Department: " + department + " | " + " Price: " + price + " | " + " Quantity: " + quantity);
+  menuOptions();
+}
