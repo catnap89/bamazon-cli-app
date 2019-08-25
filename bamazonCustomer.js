@@ -20,13 +20,13 @@ var connection = mysql.createConnection({   // create the connection information
 connection.connect(function(err) {
   if (err) throw err;
   console.log("connected as id " + connection.threadId);
-  showProducts();
+  displayInventory();
 });
 
 // ________________________________________
 // FUNCTIONS
 // ========================================
-function showProducts() {                   // Display All Products
+function displayInventory() {                   // Display All Products
   let tableData = [];
   connection.query("SELECT * FROM products", function(err, res) {
     if (err) throw err;
@@ -91,7 +91,7 @@ function purchaseOrder(id, orderAmt) {
       )
     } else {
       console.log("Bamazon does have enough " + name + " in stock to complete your order. Please try again...");
-      showProducts();
+      displayInventory();
     }
     connection.end();
   });
