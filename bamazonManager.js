@@ -82,7 +82,7 @@ function doOption(option) {
       break;
     
     case "Add to Inventory":
-      addInvnetory();
+      addInventoryPrompt();
       break;
     
     case "Add New Product":
@@ -92,5 +92,93 @@ function doOption(option) {
       connection.end();
       break;
   }
+}
+
+function viewProducts() {
+  let tableData = [];
+  connection.query("SELECT * FROM products WHERE stock_quantity > 0", function(err, res) {
+    if (err) throw err;
+    for (var i = 0; i < res.length; i++) {
+      var id = "ID: " + res[i].id;
+      var name = "Name: " + res[i].product_name;
+      var department = "Department: " + res[i].department_name;
+      var price = "Price: $" + res[i].price;
+      var quantity = "Quantity: " + res[i].stock_quantity;
+ 
+      let data;
+      data = [id, name, department, price, quantity];
+      tableData.push(data);
+    }
+    var output = table(tableData);
+    console.log(output);
+    menuOptions();
+  })
+}
+
+function viewLowInventory() {
+  let tableData = [];
+  connection.query("SELECT * FROM products WHERE stock_quantity < 5", function(err, res) {
+    if (err) throw err;
+    for (var i = 0; i < res.length; i++) {
+      var id = "ID: " + res[i].id;
+      var name = "Name: " + res[i].product_name;
+      var department = "Department: " + res[i].department_name;
+      var price = "Price: $" + res[i].price;
+      var quantity = "Quantity: " + res[i].stock_quantity;
+ 
+      let data;
+      data = [id, name, department, price, quantity];
+      tableData.push(data);
+    }
+    var output = table(tableData);
+    console.log(output);
+    menuOptions();
+  })
+}
+
+function addInventoryPrompt() {
+  inquirer
+    .prompt([
+      {
+        name: "ID",
+        type: "input",
+        message: "Please input the ID of the product you would like to add more",
+        filter: Number
+      },
+      {
+        name: "quantity",
+        type: "input",
+        message: "How many would you like to add to the inventory?",
+        filter: Number
+      }
+    ])
+    .then(function(answer) {
+      var id = answer.ID;
+      var addQuantity = answer.quantity;
+      addInventory(id, addQuantity);
+    })
+}
+
+function addInventory(id, addQuantity) {
+  connection.query("SELECT * FROM products WHERE id =" + id, function(err, product) {
+    if (err) throw err;
+    var name = product[0].product_name;
+    var newQuantity = product[0].stock_quantity + addQuantity;
+    console.log("You added " + addQuantity + " more " + name + " to the inventory");
+
+    connection.query(
+      "UPDATE products SET ? WHERE ?",
+      [
+        {
+          stock_quantity: newQuantity
+        },
+        {
+          id: id
+        }
+      ]
+    )
+
+  })
+  menuOptions();
 }
 
