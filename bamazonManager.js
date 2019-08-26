@@ -177,8 +177,8 @@ function restock(id, addQuantity) {
 }
 
 function newProductPrompt() {
-  var department = []; // department variable will store only distinct (different) department_name if duplicates exists.
-  connection.query("SELECT DISTINCT department_name FROM products", function(err, res) {
+  var department = []; 
+  connection.query("SELECT DISTINCT department_name FROM departments", function(err, res) { //used DISTINCT just in case department with same name was added more than once from bamazonSupervisor.js by accident
     if (err) throw err;
     for (var i = 0; i < res.length; i++) {
       department.push(res[i].department_name);
