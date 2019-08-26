@@ -76,6 +76,7 @@ function purchaseOrder(id, orderAmt) {
     var name = product[0].product_name;
     var stockQuantity = product[0].stock_quantity;
     var totalCost = product[0].price * orderAmt;
+    var productSales = product[0].product_sales;
     if (orderAmt <= stockQuantity) {             // determine if stock_quantity was enough for user to purchase quantity
       console.log("Successfully purchased " + orderAmt + " " + name + "!"+ "Total cost: $" + totalCost);
       connection.query(
@@ -83,6 +84,17 @@ function purchaseOrder(id, orderAmt) {
         [
           {
             stock_quantity: stockQuantity - orderAmt
+          },
+          {
+            id: id
+          }
+        ]
+      )
+      connection.query(
+        "UPDATE products SET ? WHERE ?",
+        [
+          {
+            product_sales: productSales += totalCost
           },
           {
             id: id
