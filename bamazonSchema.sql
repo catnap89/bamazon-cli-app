@@ -65,3 +65,20 @@ CREATE TABLE departments(
   over_head_costs INT NOT NULL,
   PRIMARY KEY (department_id)
 );
+
+ALTER TABLE table_name
+MODIFY COLUMN column_name datatype;
+
+ALTER TABLE products
+MODIFY COLUMN price DECIMAL(20,2) NOT NULL;
+
+ALTER TABLE products
+MODIFY COLUMN product_sales DECIMAL(20,2);
+
+ALTER TABLE departments
+MODIFY COLUMN over_head_costs DECIMAL(20,2) NOT NULL;
+
+
+
+
+
