@@ -49,6 +49,7 @@ function menuOptions() {
         type: "list",
         message: "Please select from below options.",
         choices: [
+          "View Departments",
           "View Product Sales by Department",
           "Create New Department",
           "Exit"
@@ -71,6 +72,10 @@ function doOption(option) {
     
     case "Create New Department":
       createDepartment();
+      break;
+
+    case "View Departments":
+      displayDepartment();
       break;
 
     case "Exit":
@@ -105,3 +110,60 @@ function displaySales() {
     menuOptions();
   })
 }
+
+// let's make view departments to view departments in the database
+// for situation like when new departments were created but no products were listed with the newly created departments
+function displayDepartment() {
+  connection.query("SELECT * FROM departments", function(err, res) {
+    if (err) throw err;
+    let tableData = [];
+    res.forEach(element => {
+      let departmentName = element.department_name;
+      let departmentID = "ID: " + element.department_id
+      let data;
+      data = [departmentID, departmentName];
+      tableData.push(data);
+    });
+    var output = table(tableData);
+    console.log(output);
+    menuOptions();
+  })
+}
+
+function createDepartment() {
+  // department_name, over_head_costs
+  inquirer
+    .prompt([
+      {
+        name: "name",
+        type: "input",
+        message: "What is the name of the new department?"
+      },
+      {
+        name: "overheadCost",
+        type: "number",
+        message: "Please enter overhead cost of the new department."
+      }
+    ])
+    .then(function(res) {
+      var departmentName = res.name;
+      var ohcost = res.overheadCost;
+
+      connection.query(
+        "INSERT INTO departments SET ?",
+        {
+          department_name: departmentName,
+          over_head_costs: ohcost
+        },
+        function(err, res) {
+          if (err) throw err;
+          console.log(res.affectedRows + " department created!\n");
+          menuOptions();
+        }
+      )
+    })
+}
+
+// let's make delete departments to delete unncessary departments or departments with typo, etc.
+
+
