@@ -1,17 +1,3 @@
-//  * View Product Sales by Department
-   
-//  * Create New Department
-
-//  When a supervisor selects `View Product Sales by Department`, the app should display a summarized table in their terminal/bash window. Use the table below as a guide.
-
-// | department_id | department_name | over_head_costs | product_sales | total_profit |
-// | ------------- | --------------- | --------------- | ------------- | ------------ |
-// | 01            | Electronics     | 10000           | 20000         | 10000        |
-// | 02            | Clothing        | 60000           | 100000        | 40000        |
-
-// 5. The `total_profit` column should be calculated on the fly using the difference between `over_head_costs` and `product_sales`. `total_profit` should not be stored in any database. You should use a custom alias.
-
-
 // ________________________________________
 // DEPENDENCIES
 // ========================================
@@ -52,6 +38,7 @@ function menuOptions() {
           "View Departments",
           "View Product Sales by Department",
           "Create New Department",
+          "Remove Department",
           "Exit"
           ]
       }
@@ -76,6 +63,10 @@ function doOption(option) {
 
     case "View Departments":
       displayDepartment();
+      break;
+
+    case "Remove Department":
+      removePrompt();
       break;
 
     case "Exit":
@@ -131,7 +122,6 @@ function displayDepartment() {
 }
 
 function createDepartment() {
-  // department_name, over_head_costs
   inquirer
     .prompt([
       {
@@ -166,4 +156,56 @@ function createDepartment() {
 
 // let's make delete departments to delete unncessary departments or departments with typo, etc.
 
+function removePrompt() {
+  inquirer
+    .prompt([
+      {
+        name: "ID",
+        type: "number",
+        message: "Input ID of the department you wish to remove from the database!"
+      },
+      {
+        name: "confirmation",
+        type: "confirm",
+        message: "Are you sure you want to remove this item?",
+        default: false
+      }
+    ])
+    .then(function(res) {
+      var id = res.ID;
+      var confirmation = res.confirmation;
+      if (confirmation) {
+        removeDepartment(id);
+      } else {
+        console.log("You cancelled removing department from the database.");
+        menuOptions();
+      }
+    })
+}
+
+function removeDepartment(ID) {
+
+  connection.query("SELECT * FROM departments WHERE department_id=" + ID, function(err, res) {
+    if (err) throw err;
+
+    var id = "ID: " + res[0].department_id;
+    var name = "Name: " + res[0].department_name;
+    let data;
+
+    data = [
+      [id, name]
+    ];
+    var output = table(data);
+    console.log("\n\n" + "Following department has been removed from the database \n" + output + "\n");
+    connection.query(
+      "DELETE FROM departments WHERE ?",
+      {
+        department_id: ID
+      }
+    )
+
+    menuOptions();
+  })
+
+}
 
