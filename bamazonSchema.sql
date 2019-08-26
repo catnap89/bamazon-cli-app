@@ -22,6 +22,9 @@ CREATE TABLE products(
   PRIMARY KEY (id)
 );
 
+ALTER TABLE products
+ADD product_sales INT;
+
 -- * Departments: clothing / electronics / 
 
 -- Mock Data to start with
@@ -54,3 +57,11 @@ VALUES ("Intel 9900K CPU", "electronics", 420, 10);
 
 INSERT INTO products (product_name, department_name, price, stock_quantity)
 VALUES ("Realforce Keyboard", "electronics", 200, 10);
+
+
+CREATE TABLE departments(
+  department_id INT AUTO_INCREMENT NOT NULL,
+  department_name VARCHAR(60) NOT NULL,
+  over_head_costs INT NOT NULL,
+  PRIMARY KEY (department_id)
+);
