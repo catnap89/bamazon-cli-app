@@ -177,6 +177,14 @@ function restock(id, addQuantity) {
 }
 
 function newProductPrompt() {
+  var department = []; // department variable will store only distinct (different) department_name if duplicates exists.
+  connection.query("SELECT DISTINCT department_name FROM products", function(err, res) {
+    if (err) throw err;
+    for (var i = 0; i < res.length; i++) {
+      department.push(res[i].department_name);
+    }
+  })
+
   inquirer
     .prompt([
       {
@@ -186,8 +194,9 @@ function newProductPrompt() {
       },
       {
         name: "department",
-        type: "input",
-        message: "Which department is the product categorized as?"
+        type: "list",
+        message: "Which department is the product categorized as?",
+        choices: department
       },
       {
         name: "price",
