@@ -132,7 +132,15 @@ function createDepartment() {
       {
         name: "overheadCost",
         type: "number",
-        message: "Please enter overhead cost of the new department."
+        message: "Please enter overhead cost of the new department.",
+        validate: (value) => {
+                if (!isNaN(value) && value > 0) {
+                    return true;
+                } else {
+                    console.log('Oops, please enter a number greater than 0');
+                    return false;
+                }
+            }
       }
     ])
     .then(function(res) {
@@ -162,7 +170,15 @@ function removePrompt() {
       {
         name: "ID",
         type: "number",
-        message: "Input ID of the department you wish to remove from the database!"
+        message: "Input ID of the department you wish to remove from the database!",
+        validate: (value) => {
+                if (!isNaN(value) && value > 0) {
+                    return true;
+                } else {
+                    console.log('Oops, please enter a number greater than 0');
+                    return false;
+                }
+            }
       },
       {
         name: "confirmation",
