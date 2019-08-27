@@ -52,15 +52,29 @@ function purchasePrompt() {
     .prompt([
       {
         name: "ID",
-        type: "input",
+        type: "number",
         message: "Please input ID of the product you would like to purchase",
-        filter: Number
+        validate: (value) => {
+                if (!isNaN(value) && value > 0) {
+                    return true;
+                } else {
+                    console.log('Oops, please enter a number greater than 0');
+                    return false;
+                }
+            }
       },
       {
         name: "quantity",
         type: "input",
         message: "How many would you like to purchse?",
-        filter: Number
+        validate: (value) => {
+                if (!isNaN(value) && value > 0) {
+                    return true;
+                } else {
+                    console.log('Oops, please enter a number greater than 0');
+                    return false;
+                }
+            }
       }
     ])
     .then(function(answer) {

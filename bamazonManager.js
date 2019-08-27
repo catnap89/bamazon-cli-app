@@ -135,15 +135,29 @@ function restockPrompt() {
     .prompt([
       {
         name: "ID",
-        type: "input",
+        type: "number",
         message: "Please input the ID of the product you would like to add more",
-        filter: Number
+        validate: (value) => {
+                if (!isNaN(value) && value > 0) {
+                    return true;
+                } else {
+                    console.log('Oops, please enter a number greater than 0');
+                    return false;
+                }
+            }
       },
       {
         name: "quantity",
-        type: "input",
+        type: "number",
         message: "How many would you like to add to the inventory?",
-        filter: Number
+        validate: (value) => {
+                if (!isNaN(value) && value > 0) {
+                    return true;
+                } else {
+                    console.log('Oops, please enter a number greater than 0');
+                    return false;
+                }
+            }
       }
     ])
     .then(function(answer) {
@@ -201,7 +215,15 @@ function newProductPrompt() {
       {
         name: "price",
         type: "number",
-        message: "What is the price of the product?"
+        message: "What is the price of the product?",
+        validate: (value) => {
+                if (!isNaN(value) && value > 0) {
+                    return true;
+                } else {
+                    console.log('Oops, please enter a number greater than 0');
+                    return false;
+                }
+            }
       },
       {
         name: "quantity",
