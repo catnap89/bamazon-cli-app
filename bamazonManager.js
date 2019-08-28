@@ -124,7 +124,7 @@ function displayLowInventory() {
       menuOptions();
 
     } else {
-      console.log("All Items are available to sell!");
+      console.log("All products have enough stock quantity in the inventory!");
       menuOptions();
     }
   })
