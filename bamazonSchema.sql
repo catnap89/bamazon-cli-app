@@ -17,15 +17,11 @@ CREATE TABLE products(
   id INT NOT NULL AUTO_INCREMENT,
   product_name VARCHAR(60) NOT NULL,
   department_name VARCHAR(60) NOT NULL,
-  price INT NOT NULL,
+  price DECIMAL(20,2) NOT NULL,
   stock_quantity INT NOT NULL,
+  product_sales DECIMAL(20,2),
   PRIMARY KEY (id)
 );
-
-ALTER TABLE products
-ADD product_sales INT;
-
--- * Departments: clothing / electronics / 
 
 -- Mock Data to start with
 INSERT INTO products (product_name, department_name, price, stock_quantity)
@@ -62,23 +58,14 @@ VALUES ("Realforce Keyboard", "electronics", 200, 10);
 CREATE TABLE departments(
   department_id INT AUTO_INCREMENT NOT NULL,
   department_name VARCHAR(60) NOT NULL,
-  over_head_costs INT NOT NULL,
+  over_head_costs DECIMAL(20,2) NOT NULL,
   PRIMARY KEY (department_id)
 );
 
-ALTER TABLE table_name
-MODIFY COLUMN column_name datatype;
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("electronics", 1000);
 
-ALTER TABLE products
-MODIFY COLUMN price DECIMAL(20,2) NOT NULL;
-
-ALTER TABLE products
-MODIFY COLUMN product_sales DECIMAL(20,2);
-
-ALTER TABLE departments
-MODIFY COLUMN over_head_costs DECIMAL(20,2) NOT NULL;
-
-
-
+INSERT INTO departments (department_name, over_head_costs)
+VALUES ("clothing", 500);
 
 
