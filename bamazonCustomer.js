@@ -65,7 +65,7 @@ function purchasePrompt() {
       },
       {
         name: "quantity",
-        type: "input",
+        type: "number",
         message: "How many would you like to purchse?",
         validate: (value) => {
                 if (!isNaN(value) && value > 0) {
